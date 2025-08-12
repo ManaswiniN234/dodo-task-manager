@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
@@ -10,6 +11,11 @@ app.use(express.json());
 
 app.get('/', (req, res) => res.send('Task Bento API'));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+mongoose.connect(process.env.MONGO_URI, { })
+  .then(() => {
+    console.log('Mongo connected');
+    app.listen(PORT, () => console.log(`Server running ${PORT}`));
+  })
+  .catch(err => {
+    console.error('DB connection error', err);
+  });
